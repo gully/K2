@@ -4,7 +4,7 @@ import argparse
 
 # Help string to be shown using the -h option
 descStr = """
-Wrapper for the K2TranPix code which is used to find transients in K2 data for the Background Survey. 
+Wrapper for the K2TranPix code which is used to find transients in K2 data for the Background Survey.
 """
 
 # Parse the command line options
@@ -48,21 +48,20 @@ comm.Barrier()
 field = camp
 print_mpi('Campaign ' + camp)
 
-path = '/avatar/ryanr/Data/'+field+'/'
+path = '/nobackupnfs2/mgullysa/RRH_out/Data/'+field+'/'
 Files = np.asarray(glob(path+'*.gz'))
-
-save = '/avatar/ryanr/Results/'
+save = '/nobackupnfs2/mgullysa/RRH_out/Results/'
 
 Files = np.asarray(glob(path+'*.gz'))
 # Code to remove files from the list that have already been calculated
 
 try:
-    Log = open('/avatar/ryanr/Code/shell' + field + '.out')
+    Log = open('/nobackupnfs2/mgullysa/RRH_out/Code/shell' + field + '.out')
     log = Log.read()
     lines  = log.split('n')
     files = []
     for line in lines:
-        if '/avatar/ryanr/Data/' in line:
+        if '/nobackupnfs2/mgullysa/RRH_out/Data/' in line:
             print_mpi(line)
             files.append(line)
     for i in range(len(files)):
@@ -73,9 +72,9 @@ try:
         beep = set.intersection(set(files[i]), set('On'))
         if len(beep) > 0:
             files[i] = files[i].split('On')[0]
-                   
+
         Files = np.delete(Files,np.where(files[i] == Files))
-        
+
 except (FileNotFoundError):
     print('No file')
 
@@ -125,10 +124,10 @@ print_mpi("my_start = "+str(my_start)+", my_end = "+str(my_end))
 # parallel loop
 for n in range(my_start, my_end+1):
     mytimestart = sys_time.time()
-    
+
     K2TranPix(Files[n],save)
     print_mpi(Files[n])
-    
+
     mytimestop = sys_time.time()
     mytime = mytimestop-mytimestart
 
